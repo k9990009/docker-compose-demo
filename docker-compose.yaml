@@ -1,0 +1,40 @@
+version: '3.7'
+services:
+  nginx:
+   container_name: ex-nginx
+   image: nginx:1.13
+   restart: always
+   ports:
+   - 80:80
+   - 443:443
+   volumes:
+   - ./nginx/conf.d:/etc/nginx/conf.d
+
+  mysql:
+   container_name: ex-mysql
+   image: mysql/mysql-server:5.7
+   environment:
+    MYSQL_DATABASE: test
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_ROOT_HOST: '%'
+   ports:
+   - "13306:3306"
+   restart: always
+
+  web:
+    image: registry.cn-shenzhen.aliyuncs.com/k9/docker-demo:test
+    environment:
+      - "JAVA_OPTS=-Djava.security.egd=file:/dev/./urandom -Dtomcat.name=ex-docker-demo -Dspring.profiles.active=test"
+    expose:
+      - "8080"
+#      depends_on:
+#      depends_on:
+#      - nginx
+#      - mysql
+#使用 command 可以覆盖容器启动后默认执行的命令
+    command: ["/wait-for-it.sh","-t","0","mysql:3306", "--", "/run.sh"]
+#    entrypoint: ["/wait-for-it.sh","-t","0","mysql:3306", "--"]
+#    command: ["/bin/bash","-c","sleep 15 && /run.sh"]
+#docker compose会忽略deploy参数，应使用docker-compose scale web=2
+#    deploy:
+#      replicas: 2
