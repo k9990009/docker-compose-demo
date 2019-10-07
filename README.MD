@@ -39,3 +39,16 @@ docker rmi $(docker images -f "dangling=true" -q)
 proxy_pass http://web:8080;
 spring.datasource.url=jdbc:mysql://mysql:3306/test
 ```
+修改docker-compose 配置文件，无需关闭所有服务，直接重启即可，只会重启修改了的service
+```
+docker-compose up -d
+```
+docker-compose 中的某个镜像更新了，重启单个服务
+```
+docker-compose stop service_id
+docker-compose up -d --build service_id
+```
+开发测试中，不想重构镜像而修改容器文件，可查容器在宿主机中的路径以方便修改（不推荐）
+```
+docker inspect --format='{{.GraphDriver.Data.MergedDir}}' container_id
+```
