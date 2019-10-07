@@ -24,10 +24,12 @@ services:
   web:
     image: registry.cn-shenzhen.aliyuncs.com/k9/docker-demo:test
     environment:
-      - "JAVA_OPTS=-Djava.security.egd=file:/dev/./urandom -Dtomcat.name=ex-docker-demo -Dspring.profiles.active=test"
+    - "JAVA_OPTS=-Djava.security.egd=file:/dev/./urandom -Dtomcat.name=ex-docker-demo -Dspring.profiles.active=test"
     expose:
-      - "8080"
-#      depends_on:
+    - "8080"
+#    ports:
+#    - "8080:8080"      
+#      启动依赖
 #      depends_on:
 #      - nginx
 #      - mysql
